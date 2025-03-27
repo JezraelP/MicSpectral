@@ -52,9 +52,6 @@ int main()
     
 
     while (1) {
-
-        
-        
         // Capture os dados do microfone
         Mic_ReadBufferDMA(raw_buffer, BUFFER_SIZE);
 
@@ -90,6 +87,8 @@ int main()
         int bar_count = end_index - start_index + 1; // Total de barras (11)
         // Limpe o buffer do display
         SSD1306_Clear(display_buffer, &render_area);
+        SSD1306_SetString(display_buffer, 4, 4, "x=dB | y=Hz", &Font_7x10, SSD1306_COLOR_WHITE); 
+        SSD1306_DrawLine(display_buffer, 0, 6, -1, 6, SSD1306_COLOR_WHITE);
 
         // Desenhe as barras no display
         for (int i = 0; i < bar_count; i++) {
@@ -102,7 +101,7 @@ int main()
             // Desenhar a barra correspondente
             SSD1306_DrawFilledRectangle(
                 display_buffer, 
-                i * BAR_WIDTH,                // Posição horizontal (x)
+                i * BAR_WIDTH,               // Posição horizontal (x)
                 SSD1306_HEIGHT - bar_height, // Posição vertical (y)
                 BAR_WIDTH,                   // Largura da barra
                 bar_height,                  // Altura da barra
