@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(MicSpectral MicSpectral.c Inc/microphone.c Inc/Fonts.c Inc/DisplaySSD1306.c Inc/PDSFunctions.c)
+add_executable(MicSpectral MicSpectral.c Inc/microphone.c Inc/Fonts.c Inc/DisplaySSD1306.c Inc/PDSFunctions.c Inc/Buzzer.c)
 
 pico_set_program_name(MicSpectral "MicSpectral")
 pico_set_program_version(MicSpectral "0.1")
@@ -46,7 +46,7 @@ pico_enable_stdio_usb(MicSpectral 0)
 
 # Add the standard library to the build
 target_link_libraries(MicSpectral
-        pico_stdlib hardware_i2c hardware_adc hardware_dma)
+        pico_stdlib hardware_i2c hardware_adc hardware_dma hardware_clocks hardware_pwm hardware_watchdog)
 
 # Add the standard include files to the build
 target_include_directories(MicSpectral PRIVATE
