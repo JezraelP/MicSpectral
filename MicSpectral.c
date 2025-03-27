@@ -17,9 +17,9 @@
 #define BUTTON_PAUSE_PIN 5
 #define BUZZER_PIN 21
 
-// Limitar para faixa de voz humana (85 Hz a 255 Hz)
-int start_index = 40; // Índice mínimo para 80 Hz
-int end_index = 104;  // Índice máximo para 300 Hz
+// Limitar para faixa de frequência desejada
+int start_index = 40; // Índice mínimo
+int end_index = 104;  // Índice máximo
 
 
 uint8_t display_buffer[SSD1306_BufferLength]; // Buffer para o display
@@ -70,7 +70,7 @@ int main()
 
     // Inicialize o microfone
     Mic_InitDMA();             // Inicializa o microfone com DMA
-    Mic_SampleRate(5000);     // Define a taxa de amostragem para 22 kHz
+    Mic_SampleRate(5000);     // Define a taxa de amostragem
 
     // Inicialize o display SSD1306
     i2c_init(I2C_PORT, 400 * 1000); // Inicializa o barramento I2C a 400kHz
@@ -101,15 +101,15 @@ int main()
         Mic_ReadBufferDMA(raw_buffer, BUFFER_SIZE);
 
         // Aplique o filtro passa-baixa para capturar apenas frequências relevantes
-        apply_low_pass_filter(raw_buffer, filtered_buffer, BUFFER_SIZE);
+        //apply_low_pass_filter(raw_buffer, filtered_buffer, BUFFER_SIZE);
 
         // Converta os dados filtrados para o domínio complexo
-        convert_to_complex(filtered_buffer, complex_buffer, BUFFER_SIZE);
-        /*
+        //convert_to_complex(filtered_buffer, complex_buffer, BUFFER_SIZE);
+        
         for (int i = 0; i < BUFFER_SIZE; i++) {
             converted_buffer[i] = (float)raw_buffer[i];
         }
-        convert_to_complex(converted_buffer, complex_buffer, BUFFER_SIZE);*/
+        convert_to_complex(converted_buffer, complex_buffer, BUFFER_SIZE);
 
         // Execute a FFT no buffer complexo
         fft_radix2(complex_buffer, BUFFER_SIZE);
@@ -124,7 +124,7 @@ int main()
         }
         if (max_magnitude > 0) {
             for (int i = 0; i < BUFFER_SIZE / 2; i++) {
-                magnitude_buffer[i] = (magnitude_buffer[i] / max_magnitude) * 8*SSD1306_HEIGHT;
+                magnitude_buffer[i] = (magnitude_buffer[i] / max_magnitude) * 5*SSD1306_HEIGHT;
             }
         }
 
@@ -157,7 +157,7 @@ int main()
         // Atualize o display
         SSD1306_Render(display_buffer, &render_area);
 
-        sleep_ms(50); // Pausa para renderização
+        sleep_ms(20); // Pausa para renderização
     }
 
     return 0;
